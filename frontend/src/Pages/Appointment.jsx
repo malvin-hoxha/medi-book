@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {useParams} from 'react-router-dom'
 import {AppContext} from '../context/AppContext'
 import {assets} from '../assets/assets'
+import RelatedDoctors from '../components/RelatedDoctors'
 
 const Appointment = () => {
 
@@ -155,6 +156,7 @@ const Appointment = () => {
             </div>
 
             {/* Listing Releated Doctors */}
+            <RelatedDoctors speciality={docInfo.speciality} docId={docId} />
         </div>
     ) : null
 }
