@@ -1,12 +1,8 @@
+import express from 'express';
+import upload from '../middlewares/muller';
 
+import { addDoctor } from './doctorController';
 
+const adminRouter = express.Router();
 
-//API for adding doctors
-const addDoctor = async (req, res) => {
-
-    try {
-        const { name, email, password, speciality, degree, experience, about, fees, address } = req.body;
-    } catch(error) {
-
-    }
-}
+adminRouter.post('/add-doctor', upload.single('image'), addDoctor);
