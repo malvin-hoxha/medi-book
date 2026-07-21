@@ -48,6 +48,7 @@ const Appointment = () => {
             }
 
             let timeSlots = [];
+            const slotDay = new Date(currentDate);
 
 
             while (currentDate < endTime) {
@@ -75,7 +76,7 @@ const Appointment = () => {
                 currentDate.setMinutes(currentDate.getMinutes() + 30);
             }
 
-            setDocSlots(prev => ([...prev, timeSlots]))
+            setDocSlots(prev => ([...prev, { date: slotDay, slots: timeSlots }]))
 
         }
 
@@ -138,16 +139,16 @@ const Appointment = () => {
             <div className='sm:ml-72 sm:pl-4 mt-8 font-medium text-[#565656]'>
                 <p >Booking slots</p>
                 <div className='flex gap-3 items-center w-full overflow-x-scroll mt-4'>
-                    {docSlots.length && docSlots.map((item, index) => (
+                    {docSlots.length > 0 && docSlots.map((item, index) => (
                         <div onClick={() => setSlotIndex(index)} key={index} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? 'bg-primary text-white' : 'border border-[#DDDDDD]'}`}>
-                            <p>{item[0] && daysOfWeek[item[0].datetime.getDay()]}</p>
-                            <p>{item[0] && item[0].datetime.getDate()}</p>
+                            <p>{daysOfWeek[item.date.getDay()]}</p>
+                            <p>{item.date.getDate()}</p>
                         </div>
                     ))}
                 </div>
 
                 <div className='flex items-center gap-3 w-full overflow-x-scroll mt-4'>
-                    {docSlots.length && docSlots[slotIndex].map((item, index) => (
+                    {docSlots.length > 0 && docSlots[slotIndex].slots.map((item, index) => (
                         <p onClick={() => setSlotTime(item.time)} key={index} className={`text-sm font-light  shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-[#949494] border border-[#B4B4B4]'}`}>{item.time.toLowerCase()}</p>
                     ))}
                 </div>
