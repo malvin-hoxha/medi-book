@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 export const AppContext = createContext()
 
@@ -11,6 +12,7 @@ const AppContextProvider = (props) => {
     const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '')
 
     const [userData, setUserData] = useState(false)
+
 
     const getDoctosData = async () => {
 
@@ -51,13 +53,13 @@ const AppContextProvider = (props) => {
 
     useEffect(() => {
         getDoctosData()
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (token) {
             loadUserProfileData()
         }
-    }, [token])
+    }, [token]);
 
 
     const value = {
