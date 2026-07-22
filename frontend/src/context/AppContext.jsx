@@ -15,7 +15,7 @@ const AppContextProvider = (props) => {
     const [isProfileLoading, setIsProfileLoading] = useState(!!token)
 
 
-    const getDoctosData = async () => {
+    const getDoctorsData = async () => {
 
         try {
 
@@ -56,7 +56,7 @@ const AppContextProvider = (props) => {
     }
 
     useEffect(() => {
-        getDoctosData()
+        getDoctorsData()
     }, []);
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const AppContextProvider = (props) => {
 
 
     const value = {
-        doctors, getDoctosData,
+        doctors, getDoctorsData,
         currencySymbol,
         backendUrl,
         token, setToken,

@@ -1,6 +1,14 @@
 import express from 'express'
 
-import {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment} from '../controllers/userController.js'
+import {
+    registerUser, 
+    loginUser, 
+    getProfile, 
+    updateProfile, 
+    bookAppointment, 
+    listAppointment, 
+    cancelAppointment
+} from '../controllers/userController.js'
 import authUser from '../middlewares/authUser.js'
 import upload from '../middlewares/muller.js'
 
@@ -13,6 +21,6 @@ userRouter.get('/get-profile',authUser, getProfile);
 userRouter.post('/update-profile',authUser,upload.single('image'), updateProfile);
 userRouter.post('/book-appointment', authUser, bookAppointment);
 userRouter.get('/list-appointments', authUser, listAppointment);
-
+userRouter.post("/cancel-appointment", authUser, cancelAppointment);
 
 export default userRouter;
