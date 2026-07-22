@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import {useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {AppContext} from '../context/AppContext'
 import {assets} from '../assets/assets'
 import RelatedDoctors from '../components/RelatedDoctors'
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Appointment = () => {
 
-  const {doctors, currencySymbol} = useContext(AppContext);
+  const {doctors, currencySymbol, backendUrl, token, getDoctosData } = useContext(AppContext);
    const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const {docId} = useParams();
+  const navigate = useNavigate();
 
   const [docInfo, setDocInfo] = useState({});
   const [docSlots, setDocSlots] = useState([]);
@@ -82,7 +85,48 @@ const Appointment = () => {
 
     }
 
+    const bookAppointment = async () => {
 
+        if (!token) {
+            toast.warning('Login to book appointment')
+            return navigate('/login')
+        }
+
+        if (!slotTime) {
+            return toast.warning('Please select a time slot')
+        }
+
+        const selectedSlot = docSlots[slotIndex]?.slots.find(slot => slot.time === slotTime)
+
+        if (!selectedSlot) {
+            return toast.warning('Please select a valid time slot')
+        }
+
+        const date = selectedSlot.datetime
+
+        let day = date.getDate()
+        let month = date.getMonth() + 1
+        let year = date.getFullYear()
+
+        const slotDate = day + "_" + month + "_" + year
+
+        try {
+
+            const { data } = await axios.post(backendUrl + '/api/user/book-appointment', { docId, slotDate, slotTime }, { headers: { token } })
+            if (data.success) {
+                toast.success(data.message)
+                getDoctosData()
+                navigate('/my-appointments')
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+
+    }
 
    useEffect(() => {
         if (doctors.length > 0) {
@@ -95,15 +139,6 @@ const Appointment = () => {
             getAvailableSolts()
         }
     }, [docInfo])
-
-    useEffect(() => {
-      console.log(docSlots);
-    }, [docSlots]); 
-    useEffect(() => {
-      console.log(slotTime);
-    }, [slotTime]);
-
-  
 
 
   return docInfo ? (
@@ -153,7 +188,7 @@ const Appointment = () => {
                     ))}
                 </div>
 
-                <button className='bg-primary text-white text-sm font-light px-20 py-3 rounded-full my-6'>Book an appointment</button>
+                <button onClick={bookAppointment} className='bg-primary text-white text-sm font-light px-20 py-3 rounded-full my-6'>Book an appointment</button>
             </div>
 
             {/* Listing Releated Doctors */}

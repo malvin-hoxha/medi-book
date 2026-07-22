@@ -12,6 +12,7 @@ const AppContextProvider = (props) => {
     const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '')
 
     const [userData, setUserData] = useState(false)
+    const [isProfileLoading, setIsProfileLoading] = useState(!!token)
 
 
     const getDoctosData = async () => {
@@ -35,6 +36,7 @@ const AppContextProvider = (props) => {
     const loadUserProfileData = async () => {
 
         try {
+            setIsProfileLoading(true)
 
             const { data } = await axios.get(backendUrl + '/api/user/get-profile', { headers: { token } })
 
@@ -47,6 +49,8 @@ const AppContextProvider = (props) => {
         } catch (error) {
             console.log(error)
             toast.error(error.message)
+        } finally {
+            setIsProfileLoading(false)
         }
 
     }
@@ -58,6 +62,9 @@ const AppContextProvider = (props) => {
     useEffect(() => {
         if (token) {
             loadUserProfileData()
+        } else {
+            setUserData(false)
+            setIsProfileLoading(false)
         }
     }, [token]);
 
@@ -67,7 +74,8 @@ const AppContextProvider = (props) => {
         currencySymbol,
         backendUrl,
         token, setToken,
-        userData, setUserData, loadUserProfileData
+        userData, setUserData, loadUserProfileData,
+        isProfileLoading
     }
 
     return (

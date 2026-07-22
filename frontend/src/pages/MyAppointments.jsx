@@ -7,7 +7,8 @@ import { assets } from '../assets/assets'
 
 const MyAppointments = () => {
 
-  const { doctors } = useContext(AppContext)
+  const { doctors } = useContext(AppContext);
+  const [appointments, setAppointments] = useState([]);
 
   return (
     <div>
